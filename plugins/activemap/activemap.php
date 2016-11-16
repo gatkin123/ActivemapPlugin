@@ -23,32 +23,56 @@ function continueAc(){
 }
 
 function deactivateAcmap(){
-
+	//this is the deactivater
 	delete_option('activemapactivated');
 	
 }
-function wporg_remove_options_page(){
+function acmap_remove_options_page(){
 	
-	remove_menu_page('wporg');
+	remove_menu_page('activemap');
 }
-function wporg_options_page()
+function acmap_options_page()
 {
-    add_submenu_page(
-        'tools.php',
-        'WPOrg Options',
-        'WPOrg Options',
+    add_menu_page(
+        'Activemap',
+        'Activemap Options',
         'manage_options',
-        'wporg',
-        'wporg_options_page_html'
+        'activemap',
+        'acmap_options_page_html'
     );
 }
+
+function wporg_settings_init()
+{
+    // register a new setting for "reading" page
+    register_setting('reading', 'wporg_setting_name');
+ 
+    // register a new section in the "reading" page
+    add_settings_section(
+        'wporg_settings_section',
+        'WPOrg Settings Section',
+        'wporg_settings_section_cb',
+        'reading'
+    );
+ 
+    // register a new field in the "wporg_settings_section" section, inside the "reading" page
+    add_settings_field(
+        'wporg_settings_field',
+        'WPOrg Setting',
+        'wporg_settings_field_cb',
+        'reading',
+        'wporg_settings_section'
+    );
+}
+
 if(!get_option('activemapactivated')){
-	add_action('admin_menu','wporg_remove_options_page',99);
+	add_action('admin_menu','acmap_remove_options_page',99);
 }
 else{
-	add_action('admin_menu', 'wporg_options_page');
+	add_action('admin_init','wport_settings_init');
+	add_action('admin_menu', 'acmap_options_page');
 }
-function wporg_options_page_html()
+function acmap_options_page_html()
 {
     // check user capabilities
     if (!current_user_can('manage_options')) {
